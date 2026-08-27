@@ -3,8 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1c1e1a">
+<meta name="theme-color" content="#639922">
 <title>MeshMingle</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeshMingle">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
@@ -62,6 +69,9 @@
       <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="6" height="6"/><rect x="14.5" y="3.5" width="6" height="6"/><rect x="3.5" y="14.5" width="6" height="6"/><path d="M14.5 14.5h3v3h-3zM20.5 14.5v3M17.5 20.5h3"/></svg>
       Get MeshMingle
     </button>
+    <div class="about-link-row">
+      <button class="link-btn" data-nav="about">About &amp; privacy</button>
+    </div>
   </section>
 
   <!-- CAPTURE -->
@@ -211,6 +221,55 @@
     <div class="inline-form">
       <input id="settings-new-event-name" type="text" placeholder="Regional Maker Faire 2026">
       <button id="settings-create-event-btn" class="btn btn-primary">Create</button>
+    </div>
+
+    <button class="btn btn-home" data-nav="main">
+      <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></svg>
+      Home
+    </button>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="screen-about" class="screen">
+    <header class="screen-header">
+      <button class="btn-back" data-nav="main">&lsaquo; Back</button>
+      <h2>About</h2>
+      <span class="spacer"></span>
+    </header>
+
+    <div class="about-content">
+      <h3 class="section-heading">What is MeshMingle?</h3>
+      <p>MeshMingle helps you swap contact info at trade shows and maker events by scanning QR codes &mdash; no app store, no account, no sign-up.</p>
+
+      <h3 class="section-heading">Your privacy</h3>
+      <div class="banner">
+        <p><strong>Everything stays on this device.</strong> MeshMingle stores your info, your events, and everyone you scan only in this browser's local storage &mdash; nothing is ever sent to a server. There is no account, no tracking, and no data collected by anyone, including Matt. The only way any information leaves this device is if you choose to export it (CSV or vCard) or show someone your own QR code.</p>
+      </div>
+
+      <h3 class="section-heading">A note on data loss</h3>
+      <div class="banner banner-warning">
+        <p>Because everything lives only in this browser, <strong>clearing your browser's cache or site data, or uninstalling the app, will permanently delete everything you've saved.</strong> There is no cloud backup and no way to recover lost data.</p>
+        <p>This app is provided as-is, for free, with no support and no warranty. Matt Stultz is not responsible for any lost, corrupted, or inaccessible data. If something matters, export it (CSV/vCard) so you have a copy outside the app.</p>
+      </div>
+
+      <h3 class="section-heading">Install as an app</h3>
+      <p>Installing gives you a home-screen icon and lets MeshMingle work offline. It doesn't change how data is stored &mdash; still local-only, still at risk if browser data is cleared.</p>
+
+      <p class="field-label">On iPhone &amp; iPad (Safari)</p>
+      <ol>
+        <li>Open this site in Safari.</li>
+        <li>Tap the Share icon.</li>
+        <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+        <li>Tap <strong>Add</strong>.</li>
+      </ol>
+
+      <p class="field-label">On Android (Chrome)</p>
+      <ol>
+        <li>Open this site in Chrome.</li>
+        <li>Tap the &#8942; menu in the top right.</li>
+        <li>Tap <strong>Install app</strong> (or <strong>Add to Home screen</strong>).</li>
+        <li>Confirm by tapping <strong>Install</strong>.</li>
+      </ol>
     </div>
 
     <button class="btn btn-home" data-nav="main">

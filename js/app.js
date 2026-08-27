@@ -346,4 +346,10 @@
       $('main-event-name').textContent = "Storage unavailable — try a different browser or turn off private browsing.";
       showScreen('main');
     });
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(err => console.error('SW registration failed', err));
+    });
+  }
 })();

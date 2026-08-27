@@ -1,6 +1,6 @@
 # MeshMingle
 
-Scan-and-share contact exchange for trade shows and maker events. Pure client-side web app — no backend, no build step, deployable straight to GitHub Pages.
+Scan-and-share contact exchange for trade shows and maker events. Pure client-side web app — no backend, no build step, deployable straight to GitHub Pages. Installable as a PWA with offline support.
 
 ## Run locally
 
@@ -17,7 +17,11 @@ Then open http://localhost:8080. Camera access requires HTTPS or `localhost`.
 - **Saves** — browse captured contacts by event; export a whole event as CSV or a single contact as a `.vcf` (vCard).
 - **Settings** — set your own contact info and create/switch between events.
 
-All data is stored in `localStorage` on the device — nothing leaves the browser except through explicit CSV/vCard export.
+All data is stored in IndexedDB on the device (with `navigator.storage.persist()` requested on startup) — nothing leaves the browser except through explicit CSV/vCard export.
+
+## PWA
+
+The app registers a service worker (`sw.js`) that precaches the app shell, so it keeps working offline after the first load. On iOS, add it to the home screen from Safari's share sheet for the best experience (Safari doesn't show an install prompt, and treats home-screen apps more leniently for storage than regular tabs).
 
 ## Deploying
 

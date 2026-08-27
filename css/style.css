@@ -239,6 +239,38 @@ body {
   gap: 8px;
 }
 
+.about-link-row {
+  text-align: center;
+  margin-top: 14px;
+}
+
+.about-content p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-main);
+  margin: 0 0 12px;
+}
+
+.about-content .banner p {
+  margin: 0 0 10px;
+}
+
+.about-content .banner p:last-child {
+  margin-bottom: 0;
+}
+
+.about-content ol {
+  margin: 0 0 4px;
+  padding-left: 20px;
+}
+
+.about-content li {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
 .link-btn {
   background: none;
   border: none;
@@ -291,6 +323,10 @@ textarea { resize: vertical; }
   font-size: 13px;
   color: var(--text-muted);
   margin-bottom: 16px;
+}
+
+.banner-warning {
+  border-left-color: var(--danger);
 }
 
 .status-text {
