@@ -298,6 +298,12 @@
     renderEventSelect();
   });
 
+  function normalizeWebsite(value) {
+    const trimmed = value.trim();
+    if (!trimmed) return '';
+    return /^https?:\/\//i.test(trimmed) ? trimmed : 'https://' + trimmed;
+  }
+
   $('settings-profile-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const name = $('profile-name').value.trim();
@@ -309,7 +315,7 @@
       company: $('profile-company').value.trim(),
       email: $('profile-email').value.trim(),
       phone: $('profile-phone').value.trim(),
-      website: $('profile-website').value.trim()
+      website: normalizeWebsite($('profile-website').value)
     });
 
     const redirect = pendingAfterSettingsSave;

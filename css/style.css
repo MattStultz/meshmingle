@@ -270,6 +270,8 @@ input, select, textarea {
 
 textarea { resize: vertical; }
 
+#settings-profile-form button[type="submit"] { margin-top: 20px; }
+
 .inline-form { display: flex; gap: 8px; align-items: stretch; }
 .inline-form input { flex: 1; }
 
