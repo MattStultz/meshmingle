@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meshmingle-v4';
+const CACHE_NAME = 'meshmingle-v5';
 
 const APP_SHELL = [
   './',
@@ -15,9 +15,16 @@ const APP_SHELL = [
   'icons/apple-touch-icon.png'
 ];
 
+// v5 forces immediate activation (skipWaiting) as a one-time fix for clients
+// stuck on pre-v3 JS that predates the tap-to-refresh update flow and can
+// never send it a SKIP_WAITING message on their own. Revert this back to
+// waiting for that message (remove the .then(() => self.skipWaiting()) line
+// below) starting with the next release after this one.
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL))
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
 });
 
