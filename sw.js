@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meshmingle-v3';
+const CACHE_NAME = 'meshmingle-v4';
 
 const APP_SHELL = [
   './',

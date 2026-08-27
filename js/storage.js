@@ -5,7 +5,7 @@ const Storage = (() => {
 
   let db = null;
   const cache = {
-    profile: null,
+    profiles: { professional: null, personal: null },
     events: [],
     activeEventId: null,
     contactsByEvent: {}
@@ -45,8 +45,17 @@ const Storage = (() => {
 
   async function loadCache() {
     const kv = store('kv', 'readonly');
-    cache.profile = (await reqToPromise(kv.get('profile'))) || null;
+    cache.profiles.professional = (await reqToPromise(kv.get('profile_professional'))) || null;
+    cache.profiles.personal = (await reqToPromise(kv.get('profile_personal'))) || null;
     cache.activeEventId = (await reqToPromise(kv.get('activeEventId'))) || null;
+
+    if (!cache.profiles.professional) {
+      const legacyProfile = await reqToPromise(store('kv', 'readonly').get('profile'));
+      if (legacyProfile) {
+        cache.profiles.professional = legacyProfile;
+        putKv('profile_professional', legacyProfile);
+      }
+    }
 
     cache.events = (await reqToPromise(store('events', 'readonly').getAll())) || [];
 
@@ -81,17 +90,17 @@ const Storage = (() => {
     store('kv', 'readwrite').put(value, key);
   }
 
-  function getProfile() {
-    return cache.profile;
+  function getProfile(kind) {
+    return cache.profiles[kind] || null;
   }
 
-  function saveProfile(profile) {
-    cache.profile = profile;
-    putKv('profile', profile);
+  function saveProfile(kind, profile) {
+    cache.profiles[kind] = profile;
+    putKv('profile_' + kind, profile);
   }
 
-  function hasProfile() {
-    const p = cache.profile;
+  function hasProfile(kind) {
+    const p = cache.profiles[kind];
     return !!(p && p.name && p.name.trim());
   }
 

@@ -2,7 +2,8 @@
   let pendingAfterSettingsSave = null;
   let savesView = 'events'; // 'events' | 'detail'
   let savesActiveEventId = null;
-  let shareTab = 'mine';
+  let shareTab = 'professional';
+  let settingsProfileKind = 'professional';
 
   let mediaStream = null;
   let scanRAF = null;
@@ -11,10 +12,12 @@
   const $ = (id) => document.getElementById(id);
 
   function navigate(screenId, opts = {}) {
-    const targetShareTab = opts.shareTab || 'mine';
+    const targetShareTab = opts.shareTab || 'professional';
+    const isProfileTab = targetShareTab === 'professional' || targetShareTab === 'personal';
 
-    if (screenId === 'share' && targetShareTab === 'mine' && !Storage.hasProfile()) {
-      pendingAfterSettingsSave = 'share';
+    if (screenId === 'share' && isProfileTab && !Storage.hasProfile(targetShareTab)) {
+      pendingAfterSettingsSave = targetShareTab;
+      settingsProfileKind = targetShareTab;
       renderSettings();
       showScreen('settings');
       return;
@@ -27,7 +30,12 @@
     if (screenId === 'capture') { resetCaptureView(); startCamera(); }
     if (screenId === 'share') { renderShare(); setShareTab(targetShareTab); }
     if (screenId === 'saves') { savesView = 'events'; renderSaves(); }
-    if (screenId === 'settings') renderSettings();
+    if (screenId === 'settings') { if (opts.profileKind) settingsProfileKind = opts.profileKind; renderSettings(); }
+  }
+
+  function goToSettingsForKind(kind) {
+    pendingAfterSettingsSave = kind;
+    navigate('settings', { profileKind: kind });
   }
 
   function showScreen(screenId) {
@@ -143,12 +151,23 @@
   $('capture-create-event-btn').addEventListener('click', () => navigate('settings'));
 
   // ---------- SHARE ----------
+  function updateShareKindPanel(kind) {
+    const has = Storage.hasProfile(kind);
+    $('share-' + kind + '-empty-msg').classList.toggle('hidden', has);
+    $('share-' + kind + '-qr-wrap').classList.toggle('hidden', !has);
+    $('share-' + kind + '-caption').classList.toggle('hidden', !has);
+    $('share-' + kind + '-edit-btn').textContent = (has ? 'Edit ' : 'Add ') + kind + ' info';
+  }
+
   function renderShare() {
-    const profile = Storage.getProfile();
-    if (profile) {
-      QRCode.toCanvas($('share-qr-canvas'), ContactCodec.encode(profile), { width: 260, margin: 1 }, () => {});
-      $('share-mine-caption').textContent = profile.name;
-    }
+    ['professional', 'personal'].forEach(kind => {
+      const profile = Storage.getProfile(kind);
+      if (profile) {
+        QRCode.toCanvas($('share-qr-canvas-' + kind), ContactCodec.encode(profile), { width: 260, margin: 1 }, () => {});
+        $('share-' + kind + '-caption').textContent = profile.name;
+      }
+      updateShareKindPanel(kind);
+    });
 
     const appUrl = location.origin + location.pathname;
     QRCode.toCanvas($('share-app-qr-canvas'), appUrl, { width: 260, margin: 1 }, () => {});
@@ -156,16 +175,20 @@
 
   function setShareTab(tab) {
     shareTab = tab;
-    $('share-tab-mine').classList.toggle('hidden', tab !== 'mine');
-    $('share-tab-app').classList.toggle('hidden', tab !== 'app');
-    document.querySelectorAll('.tab-btn').forEach(b => {
+    ['professional', 'personal', 'app'].forEach(t => {
+      $('share-tab-' + t).classList.toggle('hidden', t !== tab);
+    });
+    document.querySelectorAll('.share-tab-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.tab === tab);
     });
   }
 
-  document.querySelectorAll('.tab-btn').forEach(b => {
+  document.querySelectorAll('.share-tab-btn').forEach(b => {
     b.addEventListener('click', () => setShareTab(b.dataset.tab));
   });
+
+  $('share-professional-edit-btn').addEventListener('click', () => goToSettingsForKind('professional'));
+  $('share-personal-edit-btn').addEventListener('click', () => goToSettingsForKind('personal'));
 
   // ---------- SAVES ----------
   function renderSaves() {
@@ -261,20 +284,29 @@
 
   // ---------- SETTINGS ----------
   function renderSettings() {
-    const profile = Storage.getProfile();
-    $('settings-onboard-msg').classList.toggle('hidden', Storage.hasProfile());
+    const profile = Storage.getProfile(settingsProfileKind);
+    $('settings-onboard-msg').classList.toggle('hidden', Storage.hasProfile(settingsProfileKind));
 
-    if (profile) {
-      $('profile-name').value = profile.name || '';
-      $('profile-title').value = profile.title || '';
-      $('profile-company').value = profile.company || '';
-      $('profile-email').value = profile.email || '';
-      $('profile-phone').value = profile.phone || '';
-      $('profile-website').value = profile.website || '';
-    }
+    $('profile-name').value = profile ? profile.name || '' : '';
+    $('profile-title').value = profile ? profile.title || '' : '';
+    $('profile-company').value = profile ? profile.company || '' : '';
+    $('profile-email').value = profile ? profile.email || '' : '';
+    $('profile-phone').value = profile ? profile.phone || '' : '';
+    $('profile-website').value = profile ? profile.website || '' : '';
+
+    document.querySelectorAll('.profile-kind-tab').forEach(b => {
+      b.classList.toggle('active', b.dataset.kind === settingsProfileKind);
+    });
 
     renderEventSelect();
   }
+
+  document.querySelectorAll('.profile-kind-tab').forEach(b => {
+    b.addEventListener('click', () => {
+      settingsProfileKind = b.dataset.kind;
+      renderSettings();
+    });
+  });
 
   function renderEventSelect() {
     const events = Storage.getEvents();
@@ -309,7 +341,7 @@
     const name = $('profile-name').value.trim();
     if (!name) return;
 
-    Storage.saveProfile({
+    Storage.saveProfile(settingsProfileKind, {
       name,
       title: $('profile-title').value.trim(),
       company: $('profile-company').value.trim(),
@@ -318,9 +350,13 @@
       website: normalizeWebsite($('profile-website').value)
     });
 
-    const redirect = pendingAfterSettingsSave;
+    const redirectShareTab = pendingAfterSettingsSave;
     pendingAfterSettingsSave = null;
-    navigate(redirect || 'main');
+    if (redirectShareTab) {
+      navigate('share', { shareTab: redirectShareTab });
+    } else {
+      navigate('main');
+    }
   });
 
   // ---------- NAV WIRING ----------

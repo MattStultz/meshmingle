@@ -129,16 +129,27 @@
     </header>
 
     <div class="tab-row">
-      <button class="tab-btn active" data-tab="mine">My info</button>
-      <button class="tab-btn" data-tab="app">Get MeshMingle</button>
+      <button class="tab-btn share-tab-btn active" data-tab="professional">Professional</button>
+      <button class="tab-btn share-tab-btn" data-tab="personal">Personal</button>
+      <button class="tab-btn share-tab-btn" data-tab="app">Get MeshMingle</button>
     </div>
 
-    <div id="share-tab-mine" class="tab-panel">
-      <div class="qr-wrap">
-        <canvas id="share-qr-canvas"></canvas>
+    <div id="share-tab-professional" class="tab-panel">
+      <p id="share-professional-empty-msg" class="status-text hidden">You haven't added your professional info yet.</p>
+      <div id="share-professional-qr-wrap" class="qr-wrap hidden">
+        <canvas id="share-qr-canvas-professional"></canvas>
       </div>
-      <p class="qr-caption" id="share-mine-caption">&mdash;</p>
-      <button class="link-btn" data-nav="settings">Edit my info</button>
+      <p class="qr-caption hidden" id="share-professional-caption">&mdash;</p>
+      <button class="link-btn" id="share-professional-edit-btn">Edit professional info</button>
+    </div>
+
+    <div id="share-tab-personal" class="tab-panel hidden">
+      <p id="share-personal-empty-msg" class="status-text hidden">You haven't added your personal info yet.</p>
+      <div id="share-personal-qr-wrap" class="qr-wrap hidden">
+        <canvas id="share-qr-canvas-personal"></canvas>
+      </div>
+      <p class="qr-caption hidden" id="share-personal-caption">&mdash;</p>
+      <button class="link-btn" id="share-personal-edit-btn">Edit personal info</button>
     </div>
 
     <div id="share-tab-app" class="tab-panel hidden">
@@ -191,6 +202,10 @@
     <p id="settings-onboard-msg" class="banner hidden">Fill in your info so people you scan can be sure it's you &mdash; and so you have a Share QR to hand out.</p>
 
     <h3 class="section-heading">Your info</h3>
+    <div class="tab-row profile-kind-toggle">
+      <button type="button" class="tab-btn profile-kind-tab active" data-kind="professional">Professional</button>
+      <button type="button" class="tab-btn profile-kind-tab" data-kind="personal">Personal</button>
+    </div>
     <form id="settings-profile-form">
       <label class="field-label" for="profile-name">Name</label>
       <input id="profile-name" type="text" placeholder="Matt Stultz" required>
