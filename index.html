@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1c1e1a">
+<title>MeshMingle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-header-inner">
+    <svg class="printer-svg" viewBox="0 0 70 42" aria-hidden="true">
+      <circle cx="11" cy="13" r="9" class="spool-body"/>
+      <circle cx="11" cy="13" r="3.2" class="spool-hub"/>
+      <line x1="11" y1="4.5" x2="11" y2="21.5" class="spool-spoke"/>
+      <line x1="2.5" y1="13" x2="19.5" y2="13" class="spool-spoke"/>
+      <line x1="5" y1="7" x2="17" y2="19" class="spool-spoke"/>
+      <line x1="17" y1="7" x2="5" y2="19" class="spool-spoke"/>
+      <rect x="20" y="10.5" width="46" height="3.4" rx="1.7" class="printer-rail"/>
+      <g class="printer-head">
+        <rect x="-7" y="14" width="16" height="12" rx="2.5" class="printer-gantry"/>
+        <path d="M-7 26h16l-4.5 9h-7z" class="printer-nozzle"/>
+        <circle cx="1" cy="37.5" r="2.1" class="printer-drip"/>
+      </g>
+    </svg>
+    <h1 class="app-wordmark">MeshMingle</h1>
+  </div>
+  <div class="app-header-zigzag" aria-hidden="true"></div>
+</header>
+
+<div id="app">
+
+  <!-- MAIN -->
+  <section id="screen-main" class="screen active">
+    <header class="event-header">
+      <h1 id="main-event-name">Loading&hellip;</h1>
+    </header>
+    <div class="button-grid">
+      <button class="tile" data-nav="capture">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h1.5l1-1.5h7l1 1.5H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.3"/></svg>
+        <span>Capture</span>
+      </button>
+      <button class="tile" data-nav="share">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="6" height="6"/><rect x="14.5" y="3.5" width="6" height="6"/><rect x="3.5" y="14.5" width="6" height="6"/><path d="M14.5 14.5h3v3h-3zM20.5 14.5v3M17.5 20.5h3"/></svg>
+        <span>Share</span>
+      </button>
+      <button class="tile" data-nav="saves">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3.5 7a1.5 1.5 0 0 1 1.5-1.5h4l1.6 2H19A1.5 1.5 0 0 1 20.5 9v8A1.5 1.5 0 0 1 19 18.5H5A1.5 1.5 0 0 1 3.5 17Z"/></svg>
+        <span>Saves</span>
+      </button>
+      <button class="tile" data-nav="settings">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M20.5 12h-2M5.5 12h-2M17.7 6.3l-1.4 1.4M7.7 16.3l-1.4 1.4M17.7 17.7l-1.4-1.4M7.7 7.7 6.3 6.3"/></svg>
+        <span>Settings</span>
+      </button>
+    </div>
+    <button id="main-get-app-btn" class="btn btn-secondary btn-block get-app-btn">
+      <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="6" height="6"/><rect x="14.5" y="3.5" width="6" height="6"/><rect x="3.5" y="14.5" width="6" height="6"/><path d="M14.5 14.5h3v3h-3zM20.5 14.5v3M17.5 20.5h3"/></svg>
+      Get MeshMingle
+    </button>
+  </section>
+
+  <!-- CAPTURE -->
+  <section id="screen-capture" class="screen">
+    <header class="screen-header">
+      <button class="btn-back" data-nav="main">&lsaquo; Back</button>
+      <h2>Capture</h2>
+      <span class="spacer"></span>
+    </header>
+
+    <div id="capture-scan-view">
+      <p id="capture-no-event-banner" class="banner hidden">
+        No event selected &mdash; contacts will be saved to <strong>Uncategorized</strong>.
+        <button id="capture-create-event-btn" class="link-btn">Create an event</button>
+      </p>
+      <div class="video-wrap">
+        <video id="capture-video" playsinline autoplay muted></video>
+        <div class="scan-frame"></div>
+      </div>
+      <canvas id="capture-canvas" class="hidden"></canvas>
+      <p id="capture-status" class="status-text">Point the camera at a MeshMingle QR code.</p>
+    </div>
+
+    <div id="capture-result-view" class="hidden">
+      <div class="card contact-card">
+        <div class="avatar" id="result-avatar">?</div>
+        <div class="contact-fields">
+          <p class="field-name" id="result-name">&mdash;</p>
+          <p class="field-sub" id="result-title-company">&mdash;</p>
+          <p class="field-line" id="result-email"></p>
+          <p class="field-line" id="result-phone"></p>
+          <p class="field-line" id="result-website"></p>
+        </div>
+      </div>
+      <label class="field-label" for="result-notes">Notes</label>
+      <textarea id="result-notes" rows="5" placeholder="Booth number, what you talked about, follow-up ideas&hellip;"></textarea>
+      <div class="button-row">
+        <button id="result-discard-btn" class="btn btn-secondary">Discard</button>
+        <button id="result-save-btn" class="btn btn-primary">Save contact</button>
+      </div>
+    </div>
+
+    <button class="btn btn-home" data-nav="main">
+      <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></svg>
+      Home
+    </button>
+  </section>
+
+  <!-- SHARE -->
+  <section id="screen-share" class="screen">
+    <header class="screen-header">
+      <button class="btn-back" data-nav="main">&lsaquo; Back</button>
+      <h2>Share</h2>
+      <span class="spacer"></span>
+    </header>
+
+    <div class="tab-row">
+      <button class="tab-btn active" data-tab="mine">My info</button>
+      <button class="tab-btn" data-tab="app">Get MeshMingle</button>
+    </div>
+
+    <div id="share-tab-mine" class="tab-panel">
+      <div class="qr-wrap">
+        <canvas id="share-qr-canvas"></canvas>
+      </div>
+      <p class="qr-caption" id="share-mine-caption">&mdash;</p>
+      <button class="link-btn" data-nav="settings">Edit my info</button>
+    </div>
+
+    <div id="share-tab-app" class="tab-panel hidden">
+      <div class="qr-wrap">
+        <canvas id="share-app-qr-canvas"></canvas>
+      </div>
+      <p class="qr-caption">Scan to open MeshMingle in your browser &mdash; no install needed.</p>
+    </div>
+
+    <button class="btn btn-home" data-nav="main">
+      <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></svg>
+      Home
+    </button>
+  </section>
+
+  <!-- SAVES -->
+  <section id="screen-saves" class="screen">
+    <header class="screen-header">
+      <button class="btn-back" id="saves-back-btn" data-nav="main">&lsaquo; Back</button>
+      <h2 id="saves-title">Saves</h2>
+      <span class="spacer"></span>
+    </header>
+
+    <div id="saves-events-view">
+      <ul class="list" id="saves-events-list"></ul>
+    </div>
+
+    <div id="saves-event-detail-view" class="hidden">
+      <div class="button-row">
+        <button id="saves-export-csv-btn" class="btn btn-secondary btn-block">Export event as CSV</button>
+      </div>
+      <ul class="list" id="saves-contacts-list"></ul>
+      <p id="saves-empty-msg" class="status-text hidden">No contacts captured for this event yet.</p>
+    </div>
+
+    <button class="btn btn-home" data-nav="main">
+      <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></svg>
+      Home
+    </button>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="screen-settings" class="screen">
+    <header class="screen-header">
+      <button class="btn-back" data-nav="main">&lsaquo; Back</button>
+      <h2>Settings</h2>
+      <span class="spacer"></span>
+    </header>
+
+    <p id="settings-onboard-msg" class="banner hidden">Fill in your info so people you scan can be sure it's you &mdash; and so you have a Share QR to hand out.</p>
+
+    <h3 class="section-heading">Your info</h3>
+    <form id="settings-profile-form">
+      <label class="field-label" for="profile-name">Name</label>
+      <input id="profile-name" type="text" placeholder="Ada Lovelace" required>
+
+      <label class="field-label" for="profile-title">Title</label>
+      <input id="profile-title" type="text" placeholder="Firmware engineer">
+
+      <label class="field-label" for="profile-company">Company</label>
+      <input id="profile-company" type="text" placeholder="Analytical Engines Co.">
+
+      <label class="field-label" for="profile-email">Email</label>
+      <input id="profile-email" type="email" placeholder="ada@example.com">
+
+      <label class="field-label" for="profile-phone">Phone</label>
+      <input id="profile-phone" type="tel" placeholder="+1 555 010 0100">
+
+      <label class="field-label" for="profile-website">Website</label>
+      <input id="profile-website" type="url" placeholder="https://example.com">
+
+      <button type="submit" class="btn btn-primary btn-block">Save info</button>
+    </form>
+
+    <h3 class="section-heading">Event</h3>
+    <p class="field-label">Active event</p>
+    <select id="settings-event-select"></select>
+
+    <label class="field-label" for="settings-new-event-name">New event</label>
+    <div class="inline-form">
+      <input id="settings-new-event-name" type="text" placeholder="Regional Maker Faire 2026">
+      <button id="settings-create-event-btn" class="btn btn-primary">Create</button>
+    </div>
+
+    <button class="btn btn-home" data-nav="main">
+      <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></svg>
+      Home
+    </button>
+  </section>
+
+</div>
+
+<footer class="app-footer">
+  <a href="https://mattstultz.rocks" target="_blank" rel="noopener">mattstultz.rocks</a>
+</footer>
+
+<script src="lib/qrcode.min.js"></script>
+<script src="lib/jsQR.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/contact.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
