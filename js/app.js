@@ -349,7 +349,35 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(err => console.error('SW registration failed', err));
+      navigator.serviceWorker.register('sw.js')
+        .then(registration => {
+          function showUpdateBanner(worker) {
+            $('update-banner').classList.remove('hidden');
+            $('update-banner-btn').onclick = () => worker.postMessage({ type: 'SKIP_WAITING' });
+          }
+
+          if (registration.waiting && navigator.serviceWorker.controller) {
+            showUpdateBanner(registration.waiting);
+          }
+
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (!newWorker) return;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                showUpdateBanner(newWorker);
+              }
+            });
+          });
+        })
+        .catch(err => console.error('SW registration failed', err));
+
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        location.reload();
+      });
     });
   }
 })();

@@ -486,3 +486,32 @@ textarea { resize: vertical; }
 .app-footer a:active {
   color: var(--green);
 }
+
+/* Update banner */
+.update-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: var(--green-dim);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px calc(14px + var(--safe-bottom));
+  font-size: 14px;
+}
+
+.update-banner button {
+  background: #fff;
+  color: var(--green-deep);
+  border: none;
+  border-radius: var(--radius);
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  white-space: nowrap;
+}
